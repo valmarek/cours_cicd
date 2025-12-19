@@ -1,0 +1,79 @@
+name: Block deployment if NULL last_name in Students
+
+on:
+  push:
+    branches: [main]
+  #pull_request:
+    #branches: [main]
+
+jobs:
+  check-null-lastname:
+    name: Validate Students table before deploy
+    runs-on: ubuntu-latest
+
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Check for NULL last_name values
+        id: check_nulls
+        run: |
+          echo "🔍 Checking Students.last_name for NULL values..."
+          NULL_COUNT=$(PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -p "$DB_PORT" -t -c "SELECT COUNT(*) FROM Students WHERE last_name IS NULL;")
+          NULL_COUNT=$(echo $NULL_COUNT | xargs)
+          echo "NULL_COUNT=$NULL_COUNT" >> $GITHUB_ENV
+          echo "Found $NULL_COUNT NULL values."
+
+          if [ "$NULL_COUNT" -gt 0 ]; then
+            echo "❌ NULL values detected. Blocking deployment."
+            exit 1
+          fi
+          echo "✅ No NULL values found."
+
+      - name: Export offending rows (if any)
+        if: failure()  # only runs if previous step failed
+        run: |
+          echo "📦 Exporting rows with NULL last_name to null_lastnames.csv..."
+          PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -p "$DB_PORT" \
+            -c "\copy (SELECT * FROM Students WHERE last_name IS NULL) TO 'null_lastnames.csv' WITH CSV HEADER"
+          ls -l null_lastnames.csv
+
+      - name: Upload CSV as artifact
+        if: failure()  # only if NULLs found
+        uses: actions/upload-artifact@v4
+        with:
+          name: null_lastnames
+          path: null_lastnames.csv
+
+      - name: Log offending rows directly
+        if: failure()
+        run: |
+          echo "🧾 Listing offending rows:"
+          PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -p "$DB_PORT" -c "SELECT id, first_name, last_name FROM Students WHERE last_name IS NULL;"
+
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    needs: check-null-lastname
+    if: success()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Proceed with deployment
+        run: |
+          echo "🚀 No NULL values found — proceeding with deployment..."
+          # your actual deploy command here, e.g.:
+          # ./scripts/deploy.sh
