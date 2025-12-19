@@ -1,0 +1,39 @@
+name: Check duplicate student IDs
+
+on:
+  #push:
+    #branches:
+      #- main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-for-duplicate-student-ids:
+    name: Check for Duplicate Student IDs
+    runs-on: ubuntu-latest
+
+    env:
+      PGDATABASE: school
+      PGUSER: ${{ secrets.DB_USER }}
+      PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+      PGHOST: ${{ secrets.DB_HOST }}
+      PGPORT: 5432
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest psycopg2-binary
+
+      - name: Run duplicate check test
+        run: |
+          pytest -v test_no_duplicate_student_ids.py
