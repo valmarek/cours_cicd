@@ -27,6 +27,6 @@ jobs:
         id: print_var
         run: |
           echo "🔍 printing env variables"
-          echo "host = $DB_HOST, password = $DB_PASS"
+          echo "length host = ${#DB_HOST} , password = ${#DB_PASS}, user = ${#DB_USER}"
 
     
