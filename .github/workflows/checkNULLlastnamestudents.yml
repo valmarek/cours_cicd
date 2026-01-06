@@ -15,7 +15,7 @@ jobs:
       postgres:
         image: postgres:15
         ports:
-          - 5433:5433
+          - 5432:5432
 
     env:
       DB_HOST: ${{ secrets.DB_HOST }}
@@ -35,7 +35,7 @@ jobs:
 
       - name: Wait for Postgres
         run: |
-          until pg_isready -h localhost -p 5433; do
+          until pg_isready -h localhost -p 5432; do
             sleep 1
           done
 
