@@ -14,7 +14,7 @@ def db_connection():
         user=os.getenv("PGUSER", "postgres"),
         password=os.getenv("PGPASSWORD", ""),
         host=os.getenv("PGHOST", "localhost"),
-        port=os.getenv("PGPORT", "5432"),
+        port=os.getenv("PGPORT", "5433"),
     )
     yield conn
     conn.close()
