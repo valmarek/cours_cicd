@@ -13,7 +13,7 @@ jobs:
     
     services:
       postgres:
-        image: postgres:18
+        image: postgres:15
 
     env:
       DB_HOST: ${{ secrets.DB_HOST }}
