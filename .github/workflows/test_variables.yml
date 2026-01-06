@@ -1,0 +1,32 @@
+name: Block deployment if NULL last_name in Students
+
+on:
+  push:
+    branches: [main]
+  #pull_request:
+    #branches: [main]
+
+jobs:
+  check-null-lastname:
+    name: Validate Students table before deploy
+    runs-on: ubuntu-latest
+
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Printing env variables
+        id: print_var
+        run: |
+          echo "🔍 printing env variables"
+          echo "host = "$DB_HOST", password = "$DB_PASS""
+
+    
