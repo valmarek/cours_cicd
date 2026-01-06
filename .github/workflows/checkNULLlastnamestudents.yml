@@ -33,6 +33,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h localhost -p 5433; do
+            sleep 1
+          done
+
       - name: Check for NULL last_name values
         id: check_nulls
         run: |
