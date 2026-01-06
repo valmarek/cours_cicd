@@ -15,7 +15,7 @@ jobs:
       postgres:
         image: postgres:15
         ports:
-          - 5432:5433
+          - 5433:5433
 
     env:
       DB_HOST: ${{ secrets.DB_HOST }}
