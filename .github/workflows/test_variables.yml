@@ -1,4 +1,4 @@
-name: Block deployment if NULL last_name in Students
+name: test workflow
 
 on:
   push:
