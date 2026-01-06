@@ -10,6 +10,10 @@ jobs:
   check-null-lastname:
     name: Validate Students table before deploy
     runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:18
 
     env:
       DB_HOST: ${{ secrets.DB_HOST }}
