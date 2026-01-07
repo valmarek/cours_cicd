@@ -36,8 +36,8 @@ jobs:
 
       - name: Create table and generate data
         run: |
-          python generate_students_data.py
+          python python/generate_students_data.py
       
       - name: Run duplicate check test
         run: |
-          pytest -v test_no_duplicate_student_ids.py
+          pytest -v python/test_no_duplicate_student_ids.py
