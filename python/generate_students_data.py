@@ -4,7 +4,7 @@ from faker import Faker
 
 DB_NAME = os.environ.get("PGDATABASE", "school"),
 DB_USER = os.environ.get("PGUSER", "postgres"),
-DB_PASS = os.environ.get("PGPASSWORD", "")
+DB_PASS = os.environ.get("PGPASSWORD", ""),
 DB_HOST = os.environ.get("PGHOST", "localhost"),
 DB_PORT = os.environ.get("PGPORT", "5432")
 
