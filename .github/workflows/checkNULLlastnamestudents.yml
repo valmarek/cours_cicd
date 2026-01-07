@@ -55,7 +55,7 @@ jobs:
         env:
           #PGPASSWORD: ${{ secrets.DB_PASS }}
           PGPASSWORD: postgres
-          #POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
 
       - name: Export offending rows (if any)
         if: failure()  # only runs if previous step failed
