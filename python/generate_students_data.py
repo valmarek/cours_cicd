@@ -36,7 +36,7 @@ with conn:
                             first_name VARCHAR(50),
                             last_name VARCHAR(50),
                             date_of_birth DATE,
-                            address VARCHAR(100)"""
+                            address VARCHAR(100))"""
                     )
 
         # student_id
