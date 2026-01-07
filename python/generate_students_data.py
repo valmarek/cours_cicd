@@ -1,7 +1,6 @@
 import psycopg2
 import os
 from faker import Faker
-from datetime import date
 
 DB_NAME = os.environ.get("PGDATABASE", "school")
 DB_USER = os.environ.get("PGUSER", "postgres")
@@ -35,12 +34,12 @@ with conn:
                 )
     
     for _ in range(50):
-        #first_name = fake.first_name()
-        #last_name = fake.last_name()
-        #date_of_birth  = fake.date_of_birth(None,16,35)
-        first_name = 'John'
-        last_name = 'Doe'
-        date_of_birth = date(2025, 3, 1)
+        first_name = fake.first_name()
+        last_name = fake.last_name()
+        date_of_birth  = fake.date_of_birth(None,16,35)
+        #first_name = 'John'
+        #last_name = 'Doe'
+        #date_of_birth = date(2025, 3, 1)
         address  = fake.address()[:100]
 
         # student_id
