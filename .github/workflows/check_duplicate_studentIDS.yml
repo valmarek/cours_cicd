@@ -23,13 +23,6 @@ jobs:
           POSTGRES_USER: ${{ secrets.DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
 
-    env:
-      PGDATABASE: ${{ secrets.DB_NAME }}
-      PGUSER: ${{ secrets.DB_USER }}
-      PGPASSWORD: ${{ secrets.DB_PASSWORD }}
-      PGHOST: ${{ secrets.DB_HOST }}
-      PGPORT: ${{ secrets.DB_PORT }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -47,7 +40,19 @@ jobs:
       - name: Create table and generate data
         run: |
           python python/generate_students_data.py
+        env:
+          PGDATABASE: ${{ secrets.DB_NAME }}
+          PGUSER: ${{ secrets.DB_USER }}
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+          PGHOST: ${{ secrets.DB_HOST }}
+          PGPORT: ${{ secrets.DB_PORT }}
       
       - name: Run duplicate check test
         run: |
           pytest -v python/test_no_duplicate_student_ids.py
+        env:
+          PGDATABASE: ${{ secrets.DB_NAME }}
+          PGUSER: ${{ secrets.DB_USER }}
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+          PGHOST: ${{ secrets.DB_HOST }}
+          PGPORT: ${{ secrets.DB_PORT }}
