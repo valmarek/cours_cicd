@@ -15,7 +15,7 @@ jobs:
       postgres:
         image: postgres:15
         ports:
-          - 5433:5432
+          - 5433
         env:
           #POSTGRES_USER: postgres
           #POSTGRES_PASSWORD: postgres
@@ -34,7 +34,7 @@ jobs:
 
       - name: Wait for Postgres
         run: |
-          until pg_isready -h localhost -p 5432; do
+          until pg_isready -h localhost -p 5433; do
             sleep 1
           done
 
