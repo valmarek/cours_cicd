@@ -43,7 +43,7 @@ with conn:
         cur.execute("""SELECT max(id) FROM students""")       
         student_id = cur.fetchall()
         print(student_id)
-        if student_id:
+        if student_id[0][0]:
             student_id_generate = student_id[0][0] + 1
         else:
             student_id_generate = 1
