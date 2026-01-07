@@ -40,7 +40,7 @@ with conn:
         address  = fake.address()[:100]
 
         # student_id
-        cur.execute("""SELECT ISNULL(max(id), 0) FROM students""")       
+        cur.execute("""SELECT COALESCE(max(id), 0) FROM students""")       
         student_id = cur.fetchall()
         student_id_generate = student_id[0][0] + 1
         
