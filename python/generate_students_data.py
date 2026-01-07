@@ -27,6 +27,18 @@ with conn:
         date_of_birth  = fake.date_of_birth(None,16,35)
         address  = fake.address()[:100]
 
+        #drop table if it exists
+        cur.execute("""DROP TABLE IF EXISTS Students CASCADE""")
+
+        #create students table
+        cur.execute("""CREATE TABLE Students (
+                            id SERIAL PRIMARY KEY,
+                            first_name VARCHAR(50),
+                            last_name VARCHAR(50),
+                            date_of_birth DATE,
+                            address VARCHAR(100)"""
+                    )
+
         # student_id
         cur.execute("""SELECT max(student_id) FROM students""")       
         student_id = cur.fetchall()
