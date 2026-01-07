@@ -41,6 +41,8 @@ jobs:
       - name: Run schema SQL
         run: |
           psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p 5432 -v ON_ERROR_STOP=1 -f sql/1_create_students.sql
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
 
       - name: Check for NULL last_name values
         id: check_nulls
