@@ -42,7 +42,7 @@ jobs:
         id: check_nulls
         run: |
           echo "🔍 Checking Students.last_name for NULL values..."
-          NULL_COUNT=$(psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p 5432 -t -c "SELECT COUNT(*) FROM school.students WHERE last_name IS NULL;")
+          NULL_COUNT=$(psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p 5433 -t -c "SELECT COUNT(*) FROM school.students WHERE last_name IS NULL;")
           NULL_COUNT=$(echo $NULL_COUNT | xargs)
           echo "NULL_COUNT=$NULL_COUNT" >> $GITHUB_ENV
           echo "Found $NULL_COUNT NULL values."
