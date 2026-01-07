@@ -1,12 +1,12 @@
 name: Check duplicate student IDs
 
 on:
-  #push:
-    #branches:
-      #- main
-  pull_request:
+  push:
     branches:
       - main
+  #pull_request:
+    #branches:
+      #- main
 
 jobs:
   check-for-duplicate-student-ids:
@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PGDATABASE: school
+      PGDATABASE: ${{ secrets.DB_NAME }}
       PGUSER: ${{ secrets.DB_USER }}
       PGPASSWORD: ${{ secrets.DB_PASSWORD }}
       PGHOST: ${{ secrets.DB_HOST }}
-      PGPORT: 5433
+      PGPORT: ${{ secrets.DB_PORT }}
 
     steps:
       - name: Checkout repository
@@ -34,6 +34,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest psycopg2-binary
 
+      - name: Create table and generate data
+        run: |
+          python generate_students_data.py
+      
       - name: Run duplicate check test
         run: |
           pytest -v test_no_duplicate_student_ids.py
