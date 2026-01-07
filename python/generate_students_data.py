@@ -42,9 +42,9 @@ with conn:
         # student_id
         cur.execute("""SELECT COALESCE(max(id), 0) FROM students""")       
         student_id = cur.fetchall()
-        student_id_generate = student_id[0][0] + 1
+        #student_id_generate = student_id[0][0] + 1
         
-        cur.execute("INSERT INTO students VALUES (%s, %s, %s ,%s, %s)", (student_id_generate, first_name
+        cur.execute("INSERT INTO students VALUES (%s, %s, %s ,%s, %s)", (0, first_name
                                 ,last_name, date_of_birth, address) )
 
 print("Insert Done!")
