@@ -53,7 +53,8 @@ jobs:
           fi
           echo "✅ No NULL values found."
         env:
-          PGPASSWORD: ${{ secrets.DB_PASS }}
+          #PGPASSWORD: ${{ secrets.DB_PASS }}
+          PGPASSWORD: postgres
           #POSTGRES_USER: ${{ secrets.DB_USER }}
 
       - name: Export offending rows (if any)
