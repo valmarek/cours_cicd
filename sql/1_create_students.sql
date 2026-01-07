@@ -4,7 +4,7 @@
 --- 3) database name : school
 --- Create table in public schemas
 
---DROP TABLE IF EXISTS Students CASCADE;
+DROP TABLE IF EXISTS Students CASCADE;
 
 -- Table 1: Students
 CREATE TABLE Students (
