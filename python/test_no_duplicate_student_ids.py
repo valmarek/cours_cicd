@@ -2,6 +2,7 @@ import os
 import psycopg2
 import pytest
 
+
 @pytest.fixture(scope="module")
 def db_connection():
     """
@@ -24,12 +25,14 @@ def test_no_duplicate_student_ids(db_connection):
     Test that the 'students' table has no duplicate values
     """
     with db_connection.cursor() as cur:
-        cur.execute("""
+        cur.execute(
+            """
             SELECT first_name, last_name, date_of_birth, COUNT(*)
             FROM students
             GROUP BY 1,2,3
             HAVING COUNT(*) > 1;
-        """)
+        """
+        )
         duplicates = cur.fetchall()
 
     assert len(duplicates) == 0, f"Found duplicate students: {duplicates}"
