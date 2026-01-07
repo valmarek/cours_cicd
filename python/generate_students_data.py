@@ -1,6 +1,7 @@
 import psycopg2
 import os
 from faker import Faker
+from datetime import date
 
 DB_NAME = os.environ.get("PGDATABASE", "school")
 DB_USER = os.environ.get("PGUSER", "postgres")
@@ -34,17 +35,20 @@ with conn:
                 )
     
     for _ in range(50):
-        first_name = fake.first_name()
-        last_name = fake.last_name()
-        date_of_birth  = fake.date_of_birth(None,16,35)
+        #first_name = fake.first_name()
+        #last_name = fake.last_name()
+        #date_of_birth  = fake.date_of_birth(None,16,35)
+        first_name = 'John'
+        last_name = 'Doe'
+        date_of_birth = date(2025, 3, 1)
         address  = fake.address()[:100]
 
         # student_id
         cur.execute("""SELECT COALESCE(max(id), 0) FROM students""")       
         student_id = cur.fetchall()
-        #student_id_generate = student_id[0][0] + 1
+        student_id_generate = student_id[0][0] + 1
         
-        cur.execute("INSERT INTO students VALUES (%s, %s, %s ,%s, %s)", (0, first_name
+        cur.execute("INSERT INTO students VALUES (%s, %s, %s ,%s, %s)", (student_id_generate, first_name
                                 ,last_name, date_of_birth, address) )
 
 print("Insert Done!")
