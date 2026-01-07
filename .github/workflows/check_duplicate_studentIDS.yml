@@ -11,7 +11,7 @@ on:
 jobs:
   check-for-duplicate-student-ids:
     name: Check for Duplicate Student IDs
-    runs-on: ubuntu-latest'
+    runs-on: ubuntu-latest
 
     services:
       postgres:
@@ -22,7 +22,7 @@ jobs:
           POSTGRES_DB: ${{ secrets.DB_NAME }}
           POSTGRES_USER: ${{ secrets.DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
-          
+
     env:
       PGDATABASE: ${{ secrets.DB_NAME }}
       PGUSER: ${{ secrets.DB_USER }}
