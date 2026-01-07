@@ -7,7 +7,7 @@ import psycopg2
 import pytest
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(name="db_connection")
 def db_connection():
     """
     Creates a PostgreSQL database connection using environment variables.
