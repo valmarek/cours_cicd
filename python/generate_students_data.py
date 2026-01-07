@@ -21,23 +21,23 @@ cur = conn.cursor()
 fake = Faker()
 
 with conn:
+    #drop table if it exists
+    cur.execute("""DROP TABLE IF EXISTS Students CASCADE""")
+
+    #create students table
+    cur.execute("""CREATE TABLE Students (
+                        id SERIAL PRIMARY KEY,
+                        first_name VARCHAR(50),
+                        last_name VARCHAR(50),
+                        date_of_birth DATE,
+                        address VARCHAR(100))"""
+                )
+    
     for _ in range(50):
         first_name = fake.first_name()
         last_name = fake.last_name()
         date_of_birth  = fake.date_of_birth(None,16,35)
         address  = fake.address()[:100]
-
-        #drop table if it exists
-        cur.execute("""DROP TABLE IF EXISTS Students CASCADE""")
-
-        #create students table
-        cur.execute("""CREATE TABLE Students (
-                            id SERIAL PRIMARY KEY,
-                            first_name VARCHAR(50),
-                            last_name VARCHAR(50),
-                            date_of_birth DATE,
-                            address VARCHAR(100))"""
-                    )
 
         # student_id
         cur.execute("""SELECT max(id) FROM students""")       
