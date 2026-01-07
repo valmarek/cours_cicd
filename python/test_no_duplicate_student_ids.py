@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.fixture(name="db_connection")
-def db_connection():
+def fixture_db_connection():
     """
     Creates a PostgreSQL database connection using environment variables.
     Closes automatically after the test module finishes.
