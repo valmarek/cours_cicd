@@ -40,7 +40,7 @@ with conn:
                     )
 
         # student_id
-        cur.execute("""SELECT max(student_id) FROM students""")       
+        cur.execute("""SELECT max(id) FROM students""")       
         student_id = cur.fetchall()
         student_id_generate = student_id[0][0] + 1
         
