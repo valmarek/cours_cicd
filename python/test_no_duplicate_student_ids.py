@@ -10,11 +10,11 @@ def db_connection():
     Closes automatically after the test module finishes.
     """
     conn = psycopg2.connect(
-        dbname=os.environ("PGDATABASE", "school"),
-        user=os.environ("PGUSER", "postgres"),
-        password=os.environ("PGPASSWORD", ""),
-        host=os.environ("PGHOST", "localhost"),
-        port=os.environ("PGPORT", "5432"),
+        dbname=os.environ.get("PGDATABASE", "school"),
+        user=os.environ.get("PGUSER", "postgres"),
+        password=os.environ.get("PGPASSWORD", ""),
+        host=os.environ.get("PGHOST", "localhost"),
+        port=os.environ.get("PGPORT", "5432"),
     )
     yield conn
     conn.close()

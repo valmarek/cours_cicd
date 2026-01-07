@@ -2,11 +2,11 @@ import psycopg2
 import os
 from faker import Faker
 
-DB_NAME = os.environ("PGDATABASE", "school"),
-DB_USER = os.environ("PGUSER", "postgres"),
-DB_PASS = os.environ("PGPASSWORD", "")
-DB_HOST = os.environ("PGHOST", "localhost"),
-DB_PORT = os.environ("PGPORT", "5432")
+DB_NAME = os.environ.get("PGDATABASE", "school"),
+DB_USER = os.environ.get("PGUSER", "postgres"),
+DB_PASS = os.environ.get("PGPASSWORD", "")
+DB_HOST = os.environ.get("PGHOST", "localhost"),
+DB_PORT = os.environ.get("PGPORT", "5432")
 
 # creation d'une connexion
 
