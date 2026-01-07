@@ -46,7 +46,7 @@ jobs:
     
       - name: Insert test data
         run: |
-          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p "$DB_PORT" -v ON_ERROR_STOP=1 -f sql/1_insert_students.sql
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p "$DB_PORT" -v ON_ERROR_STOP=1 -f sql/2_insert_students.sql
         env:
           PGPASSWORD: ${{ secrets.DB_PASS }}
 
