@@ -1,3 +1,7 @@
+"""
+This script tests if the student table doesn't contain duplicate records
+"""
+
 import os
 import psycopg2
 import pytest

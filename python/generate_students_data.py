@@ -1,3 +1,7 @@
+"""
+This script creates a database, adds a "students" table to it, and inserts 50 records in the table
+"""
+
 import os
 import psycopg2
 from faker import Faker
