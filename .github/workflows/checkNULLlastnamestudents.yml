@@ -54,7 +54,7 @@ jobs:
         id: check_nulls
         run: |
           echo "🔍 Checking Students.last_name for NULL values..."
-          NULL_COUNT=$(psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p 5432 -t -c "SELECT COUNT(*) FROM students WHERE last_name IS NULL;")
+          NULL_COUNT=$(psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p "$DB_PORT" -t -c "SELECT COUNT(*) FROM students WHERE last_name IS NULL;")
           NULL_COUNT=$(echo $NULL_COUNT | xargs)
           echo "NULL_COUNT=$NULL_COUNT" >> $GITHUB_ENV
           echo "Found $NULL_COUNT NULL values."
@@ -66,16 +66,16 @@ jobs:
           echo "✅ No NULL values found."
         env:
           PGPASSWORD: ${{ secrets.DB_PASS }}
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
-          POSTGRES_USER: ${{ secrets.DB_USER }}
 
       - name: Export offending rows (if any)
         if: failure()  # only runs if previous step failed
         run: |
           echo "📦 Exporting rows with NULL last_name to null_lastnames.csv..."
-          PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -p "$DB_PORT" \
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB"  -p "$DB_PORT" \
             -c "\copy (SELECT * FROM Students WHERE last_name IS NULL) TO 'null_lastnames.csv' WITH CSV HEADER"
           ls -l null_lastnames.csv
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASS }}
 
       - name: Upload CSV as artifact
         if: failure()  # only if NULLs found
@@ -88,7 +88,9 @@ jobs:
         if: failure()
         run: |
           echo "🧾 Listing offending rows:"
-          PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -p "$DB_PORT" -c "SELECT id, first_name, last_name FROM Students WHERE last_name IS NULL;"
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB"  -p "$DB_PORT" -c "SELECT id, first_name, last_name FROM Students WHERE last_name IS NULL;"
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASS }}
 
   deploy:
     name: Deploy Application
