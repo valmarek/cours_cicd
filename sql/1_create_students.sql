@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS Students CASCADE;
 
 -- Table 1: Students
 CREATE TABLE Students (
-    student_id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     date_of_birth DATE,

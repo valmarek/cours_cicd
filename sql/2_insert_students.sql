@@ -1,7 +1,7 @@
 TRUNCATE TABLE Students CASCADE;
 
 
-INSERT INTO Students (student_id, first_name, last_name, date_of_birth, address)
+INSERT INTO Students (id, first_name, last_name, date_of_birth, address)
 VALUES
 (1 ,'John', 'Doe', '2004-02-12', '123 Main St.'),
 (2 ,'Jane', 'Smith', '2004-05-21', '456 Elm St.'),
