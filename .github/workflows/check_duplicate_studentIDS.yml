@@ -26,7 +26,7 @@ jobs:
     env:
       PGDATABASE: ${{ secrets.DB_NAME }}
       PGUSER: ${{ secrets.DB_USER }}
-      PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+      PGPASSWORD: ${{ secrets.DB_PASS }}
       PGHOST: ${{ secrets.DB_HOST }}
       PGPORT: ${{ secrets.DB_PORT }}
 
