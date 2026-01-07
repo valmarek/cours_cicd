@@ -26,9 +26,9 @@ def test_no_duplicate_student_ids(db_connection):
     """
     with db_connection.cursor() as cur:
         cur.execute("""
-            SELECT student_id, COUNT(*)
+            SELECT id, COUNT(*)
             FROM students
-            GROUP BY student_id
+            GROUP BY id
             HAVING COUNT(*) > 1;
         """)
         duplicates = cur.fetchall()
