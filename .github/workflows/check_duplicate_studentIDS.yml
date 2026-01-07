@@ -18,7 +18,8 @@ jobs:
       PGUSER: ${{ secrets.DB_USER }}
       PGPASSWORD: ${{ secrets.DB_PASSWORD }}
       PGHOST: ${{ secrets.DB_HOST }}
-      PGPORT: ${{ secrets.DB_PORT }}
+      #PGPORT: ${{ secrets.DB_PORT }}
+      PGPORT: 5432
 
     steps:
       - name: Checkout repository
