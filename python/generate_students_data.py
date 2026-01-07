@@ -42,7 +42,10 @@ with conn:
         # student_id
         cur.execute("""SELECT max(id) FROM students""")       
         student_id = cur.fetchall()
-        student_id_generate = student_id[0][0] + 1
+        if student_id:
+            student_id_generate = student_id[0][0] + 1
+        else:
+            student_id_generate = 1
         
         cur.execute("INSERT INTO students VALUES (%s, %s, %s ,%s, %s)", (student_id_generate, first_name
                                 ,last_name, date_of_birth, address) )
