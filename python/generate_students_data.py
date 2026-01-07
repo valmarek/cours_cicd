@@ -1,5 +1,5 @@
-import psycopg2
 import os
+import psycopg2
 from faker import Faker
 
 DB_NAME = os.environ.get("PGDATABASE", "school")
