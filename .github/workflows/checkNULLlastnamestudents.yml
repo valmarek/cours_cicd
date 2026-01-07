@@ -15,7 +15,7 @@ jobs:
       postgres:
         image: postgres:15
         ports:
-          - 5433:5432
+          - 5432:5432
         env:
           #POSTGRES_USER: postgres
           #POSTGRES_PASSWORD: postgres
@@ -34,15 +34,19 @@ jobs:
 
       - name: Wait for Postgres
         run: |
-          until pg_isready -h localhost -p 5433; do
+          until pg_isready -h localhost -p 5432; do
             sleep 1
           done
+
+      - name: Run schema SQL
+        run: |
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p 5432 -v ON_ERROR_STOP=1 -f sql/1_create_students.sql
 
       - name: Check for NULL last_name values
         id: check_nulls
         run: |
           echo "🔍 Checking Students.last_name for NULL values..."
-          NULL_COUNT=$(psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p 5433 -t -c "SELECT COUNT(*) FROM students WHERE last_name IS NULL;")
+          NULL_COUNT=$(psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p 5432 -t -c "SELECT COUNT(*) FROM students WHERE last_name IS NULL;")
           NULL_COUNT=$(echo $NULL_COUNT | xargs)
           echo "NULL_COUNT=$NULL_COUNT" >> $GITHUB_ENV
           echo "Found $NULL_COUNT NULL values."
@@ -52,10 +56,6 @@ jobs:
             exit 1
           fi
           echo "✅ No NULL values found."
-        env:
-          PGPASSWORD: ${{ secrets.DB_PASS }}
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_DB: school
 
       - name: Export offending rows (if any)
         if: failure()  # only runs if previous step failed
