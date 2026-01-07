@@ -2,7 +2,6 @@ import os
 import psycopg2
 import pytest
 
-
 @pytest.fixture(scope="module")
 def db_connection():
     """
