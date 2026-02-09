@@ -1,0 +1,108 @@
+name: Block deployment if NULL last_name in Students
+
+on:
+  push:
+    branches: [main]
+  #pull_request:
+    #branches: [main]
+
+jobs:
+  check-null-lastname:
+    name: Validate Students table before deploy
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
+    env:
+      POSTGRES_USER: ${{ secrets.DB_USER }}
+      POSTGRES_DB: ${{ secrets.DB_NAME }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+        
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h localhost -p 5432; do
+            sleep 1
+          done
+
+      - name: Create table
+        run: |
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p "$DB_PORT" -v ON_ERROR_STOP=1 -f sql/1_create_students.sql
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASS }}
+    
+      - name: Insert test data
+        run: |
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p "$DB_PORT" -v ON_ERROR_STOP=1 -f sql/2_insert_students.sql
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASS }}
+
+      - name: Check for NULL last_name values
+        id: check_nulls
+        run: |
+          echo "🔍 Checking Students.last_name for NULL values..."
+          NULL_COUNT=$(psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -p "$DB_PORT" -t -c "SELECT COUNT(*) FROM students WHERE last_name IS NULL;")
+          NULL_COUNT=$(echo $NULL_COUNT | xargs)
+          echo "NULL_COUNT=$NULL_COUNT" >> $GITHUB_ENV
+          echo "Found $NULL_COUNT NULL values."
+
+          if [ "$NULL_COUNT" -gt 0 ]; then
+            echo "❌ NULL values detected. Blocking deployment."
+            exit 1
+          fi
+          echo "✅ No NULL values found."
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASS }}
+
+      - name: Export offending rows (if any)
+        if: failure()  # only runs if previous step failed
+        run: |
+          echo "📦 Exporting rows with NULL last_name to null_lastnames.csv..."
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB"  -p "$DB_PORT" \
+            -c "\copy (SELECT * FROM Students WHERE last_name IS NULL) TO 'null_lastnames.csv' WITH CSV HEADER"
+          ls -l null_lastnames.csv
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASS }}
+
+      - name: Upload CSV as artifact
+        if: failure()  # only if NULLs found
+        uses: actions/upload-artifact@v4
+        with:
+          name: null_lastnames
+          path: null_lastnames.csv
+
+      - name: Log offending rows directly
+        if: failure()
+        run: |
+          echo "🧾 Listing offending rows:"
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB"  -p "$DB_PORT" -c "SELECT id, first_name, last_name FROM Students WHERE last_name IS NULL;"
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASS }}
+
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    needs: check-null-lastname
+    if: success()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Proceed with deployment
+        run: |
+          echo "🚀 No NULL values found — proceeding with deployment..."
+          # your actual deploy command here, e.g.:
+          # ./scripts/deploy.sh
