@@ -22,7 +22,7 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 # init un generateur
-fake = Faker()
+# fake = Faker()
 
 with conn:
     # drop table if it exists
