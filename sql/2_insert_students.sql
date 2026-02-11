@@ -22,4 +22,4 @@ VALUES
 (17 ,'Olivia', 'Chen', '2004-03-05', '706 Juniper St.'),
 (18 ,'Isabella', 'Rodriguez', '2004-06-18', '929 Magnolia Ave.'),
 (19 ,'Matthew', 'Wilson', '2004-09-30', '152 Willow St.'),
-(20 ,'Liam', 'Walton', '2004-01-12', '375 Spruce Ave.');
+(20 ,'Liam', 'Walto', '2004-01-12', '375 Spruce Ave.');
